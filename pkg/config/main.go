@@ -2,8 +2,6 @@ package config
 
 import (
 	"os"
-
-	supportConfig "github.com/stellar/go/support/config"
 )
 
 type Config struct {
@@ -63,5 +61,5 @@ type ethereumConfig struct {
 // and returns an initialized config object.
 func Parse(content string) (Config, error) {
 	var dest Config
-	return dest, supportConfig.Decode(os.ExpandEnv(content), &dest)
+	return dest, Decode(os.ExpandEnv(content), &dest)
 }
