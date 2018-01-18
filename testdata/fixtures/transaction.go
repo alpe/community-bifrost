@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/stellar/go/services/bifrost/queue"
+	"github.com/alpe/community-bifrost/pkg/queue"
 )
 
 func Transaction() queue.Transaction {

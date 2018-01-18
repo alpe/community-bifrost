@@ -1,0 +1,55 @@
+package: github.com/alpe/community-bifrost
+import:
+- package: github.com/Masterminds/squirrel
+  version: v1.0
+- package: github.com/btcsuite/btcd
+  subpackages:
+  - chaincfg
+  - chaincfg/chainhash
+  - rpcclient
+  - txscript
+  - wire
+- package: github.com/btcsuite/btcutil
+- package: github.com/ethereum/go-ethereum
+  version: v1.7.3
+  subpackages:
+  - common
+  - core/types
+  - crypto
+  - ethclient
+- package: github.com/facebookgo/inject
+- package: github.com/go-chi/chi
+  version: v3.3.2
+  subpackages:
+  - middleware
+- package: github.com/haltingstate/secp256k1-go
+- package: github.com/jmoiron/sqlx
+- package: github.com/lib/pq
+- package: github.com/r3labs/sse
+  version: 1.0.1
+- package: github.com/rubenv/sql-migrate
+- package: github.com/sirupsen/logrus
+  version: v1.0.4
+- package: github.com/spf13/cobra
+#  version: v0.0.1
+- package: github.com/stellar/go
+  subpackages:
+  - build
+  - clients/horizon
+  - keypair
+  - support/config
+  - support/db
+  - support/errors
+  - support/log
+  - xdr
+- package: github.com/stretchr/testify
+  version: v1.2.0
+  subpackages:
+  - mock
+  - require
+- package: github.com/tyler-smith/go-bip32
+- package: golang.org/x/net
+  subpackages:
+  - context
+- package: github.com/bitcoin/bitcoin
+  version: v0.15.1
