@@ -1,0 +1,39 @@
+language: go
+
+os:
+  - linux
+
+services:
+- postgres
+- docker
+
+addons:
+  postgresql: '9.6'
+
+go:
+- '1.9'
+- tip
+
+env:
+- GORACE="halt_on_error=1"
+
+before_install:
+- wget https://github.com/Masterminds/glide/releases/download/v0.13.1/glide-v0.13.1-linux-amd64.tar.gz
+- tar -xzvf glide-v0.13.1-linux-amd64.tar.gz
+- cp linux-amd64/glide $GOPATH/bin
+
+install:
+- glide install
+#- docker pull alpetest/golang-builder:next_version
+
+script:
+#- docker run --rm -v $(pwd):/src -v /var/run/docker.sock:/var/run/docker.sock --env TEST_TAGS=integration --env alpetest/golang-builder:next_version mytag
+- go test -race ./...
+- CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -tags nocgo -ldflags '-extldflags "-static"' -o $(pwd)/cmd/bifrost/bifrost github.com/alpe/community-bifrost/cmd/bifrost
+- docker build --pull -t alpetest/mybifrost -f "$(pwd)/cmd/bifrost/Dockerfile" .
+
+after_success:
+- if [[ "$TRAVIS_GO_VERSION" == "1.9" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  docker push alpetest/mybifrost;
+  fi
