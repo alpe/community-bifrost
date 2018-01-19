@@ -19,9 +19,9 @@ func TestPollTransactionQueueShouldRetryOnErrors(t *testing.T) {
 	server := Server{
 		TransactionsQueue:          queueMock,
 		StellarAccountConfigurator: &stellar.AccountConfigurator{},
-		log: common.CreateLogger("test server"),
+		log:             common.CreateLogger("test server"),
+		queueRetryDelay: time.Nanosecond,
 	}
-	defaultQueueRetryDelay = time.Nanosecond
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Millisecond)
 	defer cancel()
 
@@ -60,9 +60,9 @@ func TestPollTransactionQueueShouldNotSleepWhenQueueHasElements(t *testing.T) {
 	server := Server{
 		TransactionsQueue:          queuedTransactionStub(stub),
 		StellarAccountConfigurator: &stellar.AccountConfigurator{},
-		log: common.CreateLogger("test server"),
+		log:             common.CreateLogger("test server"),
+		queueRetryDelay: time.Second,
 	}
-	defaultQueueRetryDelay = time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 
@@ -114,9 +114,9 @@ func TestPollTransactionQueueShouldNotBlockWhileProcessing(t *testing.T) {
 	server := Server{
 		TransactionsQueue:          queuedTransactionStub(stub),
 		StellarAccountConfigurator: &stellar.AccountConfigurator{},
-		log: common.CreateLogger("test server"),
+		log:             common.CreateLogger("test server"),
+		queueRetryDelay: time.Second,
 	}
-	defaultQueueRetryDelay = time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 	defer cancel()
 

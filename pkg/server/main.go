@@ -5,6 +5,8 @@ import (
 	"math/big"
 	"net/http"
 
+	"time"
+
 	"github.com/alpe/community-bifrost/pkg/bitcoin"
 	"github.com/alpe/community-bifrost/pkg/config"
 	"github.com/alpe/community-bifrost/pkg/database"
@@ -38,6 +40,7 @@ type Server struct {
 	httpServer                 *http.Server
 	log                        *log.Entry
 	stopTransactionQueueWorker context.CancelFunc
+	queueRetryDelay            time.Duration
 }
 
 type GenerateAddressResponse struct {

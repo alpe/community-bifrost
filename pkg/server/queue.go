@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	processingTimeout      = database.DefaultTransactionLockTTL - 5*time.Second
-	defaultQueueRetryDelay = time.Second
+	processingTimeout = database.DefaultTransactionLockTTL - 5*time.Second
 )
 
 // poolTransactionsQueue pools transactions queue which contains only processed and
@@ -20,7 +19,7 @@ func (s *Server) poolTransactionsQueue(ctx context.Context) {
 	defer s.log.Info("Stopped pooling transactions queue")
 
 	exit := ctx.Done()
-	retryDelayer := time.NewTimer(defaultQueueRetryDelay)
+	retryDelayer := time.NewTimer(s.queueRetryDelay)
 	defer retryDelayer.Stop()
 
 	for ctx.Err() == nil {
@@ -32,7 +31,7 @@ func (s *Server) poolTransactionsQueue(ctx context.Context) {
 			continue
 		}
 
-		retryDelayer.Reset(defaultQueueRetryDelay)
+		retryDelayer.Reset(s.queueRetryDelay)
 		select {
 		case <-exit:
 			return

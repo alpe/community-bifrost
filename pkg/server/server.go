@@ -91,6 +91,7 @@ func (s *Server) Start() error {
 	signal.Notify(signalInterrupt, os.Interrupt)
 	ctx, cancel := context.WithCancel(context.Background())
 	s.stopTransactionQueueWorker = cancel
+	s.queueRetryDelay = 10 * time.Second
 	go s.poolTransactionsQueue(ctx)
 	go s.startHTTPServer()
 

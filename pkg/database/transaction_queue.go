@@ -13,10 +13,9 @@ import (
 	"github.com/stellar/go/support/errors"
 )
 
-var (
-	_                         queue.Queue = &PostgresDatabase{}
-	DefaultTransactionLockTTL             = 2 * time.Minute
-)
+const DefaultTransactionLockTTL = 2 * time.Minute
+
+var _ queue.Queue = &PostgresDatabase{}
 
 // QueueAdd implements queue.Queue interface. If element already exists in a queue, it should
 // return nil.
