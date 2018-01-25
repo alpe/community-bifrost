@@ -1,4 +1,5 @@
 language: go
+sudo: required
 
 os:
   - linux
@@ -9,6 +10,9 @@ services:
 
 addons:
   postgresql: '9.6'
+  apt:
+    packages:
+      - docker-ce
 
 go:
 - '1.9'
@@ -28,14 +32,16 @@ install:
 
 before_script:
 - psql -c 'create database bifrost_test;' -U postgres
+- mkdir -p ~/.docker/trust/private
+- cp .ci/ddbc2af076f1fc33283cc7030891b45e66b1c3ce9739a2ac2489b9dcb40c1a93.key ~/.docker/trust/private/
 
 script:
 - go test -tags integration -race ./...
 - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -tags nocgo -ldflags '-extldflags "-static"' -o $(pwd)/cmd/bifrost/bifrost github.com/alpe/community-bifrost/cmd/bifrost
-- docker build --pull -t alpetest/mybifrost -f "$(pwd)/cmd/bifrost/Dockerfile" .
+- docker build --pull -t alpetest/mybifrost:latest -f "$(pwd)/cmd/bifrost/Dockerfile" .
 
 after_success:
 - if [[ "$TRAVIS_GO_VERSION" == "1.9" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
   docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  docker push alpetest/mybifrost;
+  DOCKER_CONTENT_TRUST=1 docker push alpetest/mybifrost:latest;
   fi
